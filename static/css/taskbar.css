@@ -1,0 +1,108 @@
+/* Barre des tâches */
+#taskbar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: var(--tb-h); z-index: 3;
+  display: flex; align-items: center;
+  background: var(--taskbar-bg); backdrop-filter: blur(30px) saturate(1.5);
+  border-top: 1px solid var(--border); color: var(--text);
+}
+.style-win10 #taskbar { color: #fff; border-top: 0; }
+.style-win10.theme-light #taskbar { background: rgba(225, 230, 240, .9); color: #000; }
+
+.tb-main { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; height: 100%; }
+.tb-apps { display: flex; align-items: center; gap: 4px; height: 100%; }
+.style-win10 .tb-main { position: static; transform: none; gap: 0; }
+.style-win10 .tb-apps { gap: 0; }
+
+.tb-btn {
+  position: relative; height: 40px; min-width: 40px; padding: 0 8px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit;
+}
+.tb-btn:hover { background: var(--hover); }
+.tb-btn:active { background: var(--pressed); }
+.style-win10 .tb-btn { height: 100%; min-width: 48px; }
+.style-win10 .tb-btn:hover { background: rgba(255, 255, 255, .1); }
+
+.tb-start .logo-svg { width: 24px; height: 24px; fill: #0a84ff; transition: transform .15s; }
+.theme-dark .tb-start .logo-svg { fill: #5ab8ff; }
+.tb-start:active .logo-svg { transform: scale(.85); }
+.style-win10 .tb-start .logo-svg { fill: currentColor; width: 18px; height: 18px; }
+.style-win10 .tb-start:hover .logo-svg, .style-win10 .tb-start.open .logo-svg { fill: #3ba0ff; }
+
+.tb-search { width: 180px; justify-content: flex-start; border-radius: 20px; background: var(--hover); border: 1px solid var(--border); height: 34px; margin: 0 6px; }
+.tb-search-ico { font-size: 14px; }
+.tb-search-text { font-size: 13px; color: var(--text-2); white-space: nowrap; }
+.style-win10 .tb-search { width: 300px; height: 100%; margin: 0; border-radius: 0; border: 0; background: rgba(255, 255, 255, .92); padding: 0 12px; }
+.style-win10 .tb-search .tb-search-text { color: #444; }
+.style-win10.theme-dark .tb-search { background: rgba(60, 60, 64, .95); }
+.style-win10.theme-dark .tb-search .tb-search-text { color: #ccc; }
+
+.tb-app { width: 44px; }
+.style-win10 .tb-app { width: 48px; }
+.tb-ico { font-size: 22px; display: grid; place-items: center; width: 26px; height: 26px; }
+.tb-ico .ico-emoji { font-size: 22px; }
+.tb-ico .app-img-icon { width: 24px; height: 24px; }
+.tb-label { display: none; }
+.tb-count {
+  position: absolute; top: 4px; right: 4px; min-width: 14px; height: 14px; padding: 0 3px;
+  font-size: 9px; line-height: 14px; border-radius: 7px; background: var(--accent); color: var(--on-accent);
+}
+.tb-indicator {
+  position: absolute; bottom: 1px; left: 50%; width: 0; height: 3px; border-radius: 2px;
+  background: var(--text-2); transform: translateX(-50%); transition: width .2s, background .2s;
+}
+.tb-app.running .tb-indicator { width: 6px; }
+.tb-app.active { background: var(--hover); }
+.tb-app.active .tb-indicator { width: 16px; background: var(--accent); }
+.style-win10 .tb-indicator { bottom: 0; height: 2px; border-radius: 0; background: #8ab8ff; }
+.style-win10 .tb-app.running .tb-indicator { width: calc(100% - 8px); }
+.style-win10 .tb-app.active { background: rgba(255, 255, 255, .16); }
+.style-win10 .tb-app.active .tb-indicator { width: 100%; background: #9fd0ff; }
+
+.tb-tray { margin-left: auto; display: flex; align-items: center; height: 100%; gap: 2px; padding-left: 6px; }
+.tb-tray-icons { gap: 6px; font-size: 13px; }
+.tb-clock { flex-direction: column; gap: 0; align-items: flex-end; font-size: 12px; line-height: 1.25; padding: 0 10px; }
+.tb-show-desktop { width: 10px; height: 100%; border: 0; border-left: 1px solid var(--border); background: transparent; margin-left: 4px; }
+.tb-show-desktop:hover { background: var(--hover); }
+
+.tb-popup {
+  position: absolute; bottom: calc(var(--tb-h) + 8px); z-index: 5; min-width: 240px; max-width: 360px; padding: 4px;
+  background: var(--menu-bg); backdrop-filter: blur(30px); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-soft); animation: pop-in .12s;
+}
+.tb-popup-item {
+  width: 100%; display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 8px;
+  border: 0; background: transparent; border-radius: var(--radius-sm); text-align: left;
+}
+.tb-popup-item span:nth-child(2) { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-popup-item:hover, .tb-popup-item.active { background: var(--hover); }
+.tb-popup-close { opacity: .6; padding: 2px 6px; border-radius: 3px; }
+.tb-popup-close:hover { background: #c42b1c; color: #fff; opacity: 1; }
+
+#calendar-flyout {
+  position: absolute; right: 12px; bottom: calc(var(--tb-h) + 12px); z-index: 4; width: 330px; padding: 16px;
+  background: var(--menu-bg); backdrop-filter: blur(30px) saturate(1.5); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); animation: slide-up .18s ease-out;
+}
+.style-win10 #calendar-flyout { right: 0; bottom: var(--tb-h); }
+.cal-time { font-size: 34px; font-weight: 300; }
+.cal-date { color: var(--accent); text-transform: capitalize; margin-bottom: 12px; }
+.cal-nav { display: flex; align-items: center; gap: 4px; margin: 6px 0; border-top: 1px solid var(--border); padding-top: 10px; }
+.cal-title { flex: 1; font-weight: 600; text-transform: capitalize; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-grid span { height: 36px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; }
+.cal-head { color: var(--text-2); font-size: 12px !important; }
+.cal-day:hover { background: var(--hover); }
+.cal-day.today { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+@keyframes slide-up { from { opacity: 0; transform: translateY(16px); } }
+
+/* Téléphone : barre des tâches alignée à gauche, sans recherche ni icônes réseau */
+@media (max-width: 640px) {
+  .tb-main { position: static; transform: none; min-width: 0; flex: 1; gap: 2px; }
+  .tb-apps { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .tb-search, .tb-tray-icons, .tb-date { display: none; }
+  .tb-app { flex: none; }
+  .tb-tray { flex: none; padding-left: 2px; }
+  .tb-clock { padding: 0 6px; }
+  #calendar-flyout { right: 4px; left: 4px; width: auto; }
+}

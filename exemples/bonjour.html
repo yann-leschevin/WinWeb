@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Ardoise magique</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100vh; display: flex; flex-direction: column; font-family: "Segoe UI", system-ui, sans-serif; background: #f5f7fb; color: #1f2937; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border-bottom: 1px solid #e5e7eb; flex-wrap: wrap; }
+  h1 { font-size: 18px; margin: 0 12px 0 0; }
+  input[type=color] { width: 36px; height: 30px; border: 0; padding: 0; background: none; }
+  button { border: 1px solid #d1d5db; background: #fff; border-radius: 6px; padding: 5px 12px; font: inherit; cursor: pointer; }
+  button:hover { background: #f3f4f6; }
+  label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  main { flex: 1; position: relative; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; background: #fff; }
+  footer { padding: 6px 14px; font-size: 12px; color: #6b7280; background: #fff; border-top: 1px solid #e5e7eb; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎨 Ardoise magique</h1>
+    <label>Couleur <input type="color" id="color" value="#2563eb"></label>
+    <label>Épaisseur <input type="range" id="size" min="1" max="40" value="6"></label>
+    <button id="rainbow">🌈 Arc-en-ciel : non</button>
+    <button id="clear">Effacer</button>
+  </header>
+  <main><canvas id="board"></canvas></main>
+  <footer id="info">Exemple .html : cette page s'exécute dans une iframe sandboxée (allow-scripts, sans allow-same-origin).</footer>
+<script>
+(function () {
+  var canvas = document.getElementById('board');
+  var ctx = canvas.getContext('2d');
+  var color = document.getElementById('color');
+  var size = document.getElementById('size');
+  var rainbowBtn = document.getElementById('rainbow');
+  var info = document.getElementById('info');
+  var drawing = false, last = null, rainbow = false, hue = 0, strokes = 0;
+
+  function resize() {
+    var data = canvas.width ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    if (data) ctx.putImageData(data, 0, 0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  canvas.addEventListener('pointerdown', function (e) {
+    drawing = true; last = { x: e.offsetX, y: e.offsetY }; canvas.setPointerCapture(e.pointerId); strokes++;
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!drawing) return;
+    hue = (hue + 3) % 360;
+    ctx.strokeStyle = rainbow ? 'hsl(' + hue + ', 90%, 55%)' : color.value;
+    ctx.lineWidth = size.value;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    last = { x: e.offsetX, y: e.offsetY };
+  });
+  canvas.addEventListener('pointerup', function () {
+    drawing = false;
+    info.textContent = strokes + ' trait(s) dessiné(s). Origine du document : ' + (location.origin || 'opaque') + ' (bac à sable).';
+  });
+  document.getElementById('clear').onclick = function () { ctx.clearRect(0, 0, canvas.width, canvas.height); strokes = 0; };
+  rainbowBtn.onclick = function () {
+    rainbow = !rainbow;
+    rainbowBtn.textContent = '🌈 Arc-en-ciel : ' + (rainbow ? 'oui' : 'non');
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WinWeb</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6.5' height='6.5' fill='%230a84ff'/%3E%3Crect x='8.5' y='1' width='6.5' height='6.5' fill='%230a84ff'/%3E%3Crect x='1' y='8.5' width='6.5' height='6.5' fill='%230a84ff'/%3E%3Crect x='8.5' y='8.5' width='6.5' height='6.5' fill='%230a84ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/windows.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/taskbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/startmenu.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/apps.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/office.css') }}">
+</head>
+<body class="theme-light style-win11 booting" data-max-upload="{{ max_upload_mb }}">
+  <!-- Démarrage -->
+  <div id="boot-screen" class="screen">
+    <div class="boot-logo" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="boot-spinner" aria-label="Démarrage"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="boot-text"></div>
+  </div>
+
+  <!-- Écran éteint -->
+  <div id="off-screen" class="screen hidden">
+    <p>WinWeb est arrêté.</p>
+    <button type="button" class="power-on">⏻ Allumer</button>
+  </div>
+
+  <!-- Verrouillage -->
+  <div id="lock-screen" class="screen hidden" tabindex="-1">
+    <div class="lock-clock">
+      <div class="lock-time">00:00</div>
+      <div class="lock-date"></div>
+    </div>
+    <div class="lock-login">
+      <div class="lock-avatar">👤</div>
+      <div class="lock-user">Utilisateur</div>
+      <button type="button" class="lock-signin">Se connecter</button>
+    </div>
+    <div class="lock-hint">Cliquez ou appuyez sur une touche pour déverrouiller</div>
+  </div>
+
+  <!-- Session -->
+  <div id="desktop-root">
+    <div id="desktop" data-drop-path="/Bureau" data-drop-surface="desktop" tabindex="-1">
+      <div id="desktop-icons"></div>
+      <div id="lasso" class="hidden"></div>
+    </div>
+    <div id="window-layer"></div>
+    <div id="snap-preview" class="hidden"></div>
+    <div id="start-menu" class="hidden" aria-label="Menu Démarrer"></div>
+    <div id="calendar-flyout" class="hidden"></div>
+    <div id="taskbar"></div>
+  </div>
+
+  <div id="drop-overlay" class="hidden">
+    <div class="drop-card">
+      <div class="drop-icon">📥</div>
+      <div class="drop-title">Déposez vos fichiers</div>
+      <div class="drop-target-label">sur le Bureau</div>
+    </div>
+  </div>
+  <div id="context-menu-layer"></div>
+  <div id="toasts"></div>
+
+  <noscript>WinWeb nécessite JavaScript.</noscript>
+  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
