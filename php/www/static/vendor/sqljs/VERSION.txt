@@ -1,0 +1,1 @@
+sql.js 1.14.2 (https://github.com/sql-js/sql.js) — licence MIT, voir LICENSE.txt. Fichiers dist/sql-wasm.js et dist/sql-wasm.wasm du paquet npm, intégrité sha512 vérifiée.

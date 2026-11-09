@@ -1,4 +1,45 @@
-# WinWeb — un bureau Windows 11 / Windows 10 dans le navigateur
+# WinWeb
+
+> 🌐 **Essayer en ligne : <https://leschevin.com/projets/winweb/>**
+>
+> 🤝 **Version PHP et mise en ligne réalisées par Yann Leschevin ([@yann-leschevin](https://github.com/yann-leschevin)) en collaboration avec Claude (Anthropic), via [Claude Code](https://claude.com/claude-code)** — novembre 2026.
+
+Un bureau complet dans le navigateur : explorateur de fichiers, bureautique (traitement de texte, tableur, diaporama, base de données, notes), éditeur de code, navigateur, applications `.wapp`…
+
+Ce dépôt contient **deux versions** du projet :
+
+| Partie | Dossier | Rôle | Lancer en local |
+|--------|---------|------|-----------------|
+| 🐍 **Python** (Flask) | racine du dépôt | version d'origine, à lancer sur son ordinateur | `python3 app.py` puis http://127.0.0.1:5000 |
+| 🐘 **PHP** | [`php/`](php/) | version publiée sur [leschevin.com](https://leschevin.com/projets/winweb/) (hébergement OVH) | `cd php && php -S 127.0.0.1:8080 -t www` |
+
+---
+
+## 🐘 Partie PHP — version en ligne
+
+👉 <https://leschevin.com/projets/winweb/> · documentation détaillée : [`php/README.md`](php/README.md)
+
+La version en ligne n'a **pas de serveur de fichiers** : chaque visiteur a son propre PC virtuel,
+enregistré dans **son navigateur** (IndexedDB). Rien n'est envoyé ni stocké sur l'hébergement.
+
+- même interface que la version Python ; seul `static/js/api.js` change (mêmes fonctions) ;
+- fichiers servis par un *service worker* (`sw.js`), bases SQLite avec **sql.js** (WebAssembly, licence MIT),
+  `.wapp` décompressés en JavaScript, en-têtes PE analysés en JavaScript ;
+- navigateur intégré en mode Direct uniquement (pas de mandataire ouvert sur un site public) ;
+- styles d'interface nommés « Moderne » / « Classique ».
+
+Tests : `bash php/tests/test.sh` (77 vérifications, dont l'API complète exécutée dans Firefox sans fenêtre).
+
+Le dossier `php/www/` est exactement ce qui est envoyé sur l'hébergement (dans `www/projets/winweb/`).
+
+---
+
+## 🐍 Partie Python — version d'origine
+
+Le code Python n'a pas été modifié par le portage : il reste à la racine du dépôt.
+Sa documentation d'origine suit.
+
+### WinWeb — un bureau Windows 11 / Windows 10 dans le navigateur
 
 > 🤖 **Projet développé par une IA** : le code, les tests et la documentation de WinWeb ont été écrits par
 > **Claude** (Anthropic), via **Claude Code**, à partir des demandes de Yann Leschevin.
@@ -9,7 +50,7 @@ sélectionnable) dans une page web. Le serveur est en **Python + Flask** (biblio
 standard uniquement en plus de Flask). L'interface est faite en **HTML, CSS et
 JavaScript natifs** (modules ES), sans framework, sans Node.js et sans CDN.
 
-## Lancement
+#### Lancement
 
 ```bash
 python3 app.py
@@ -38,7 +79,7 @@ manque, puis lance le serveur :
 ./source.sh
 ```
 
-## Fonctionnalités
+#### Fonctionnalités
 
 - **Démarrage et verrouillage** : animation de boot, écran de verrouillage avec heure et date
   (clic ou touche pour déverrouiller), arrêt, redémarrage et verrouillage depuis le menu Démarrer.
@@ -98,7 +139,7 @@ manque, puis lance le serveur :
   Dossiers par défaut : Bureau, Documents, Images, Téléchargements, Programmes, plus la Corbeille
   (restaurer, supprimer définitivement, vider).
 
-## Glisser-déposer
+#### Glisser-déposer
 
 Déposez des fichiers (ou des dossiers entiers) n'importe où dans la page : un calque apparaît
 et indique la destination. Les fichiers sont envoyés au serveur et apparaissent :
@@ -110,7 +151,7 @@ et indique la destination. Les fichiers sont envoyés au serveur et apparaissent
 Le glisser-déposer fonctionne aussi entre les fenêtres de WinWeb : bureau ↔ explorateur ↔ dossiers ↔
 corbeille. Maintenez Ctrl pour copier au lieu de déplacer.
 
-### Exemples prêts à déposer (`exemples/`)
+##### Exemples prêts à déposer (`exemples/`)
 
 | Fichier          | Type        | Contenu                                                        |
 |------------------|-------------|----------------------------------------------------------------|
@@ -120,12 +161,12 @@ corbeille. Maintenez Ctrl pour copier au lieu de déplacer.
 | `demo.js`        | script      | sortie console, tâches asynchrones, erreur volontaire          |
 | `make_wapp.py`   | générateur  | recrée les `.wapp` avec `zipfile` : `python3 exemples/make_wapp.py` |
 
-## Formats « exécutables »
+#### Formats « exécutables »
 
 Un navigateur ne peut pas exécuter de binaires natifs. WinWeb définit donc ses propres formats.
 Un double-clic lance le fichier avec l'application associée (voir *Paramètres → Applications par défaut*).
 
-### `.wapp` — application WinWeb
+##### `.wapp` — application WinWeb
 
 Archive **zip** contenant à sa racine (ou dans un unique sous-dossier) :
 
@@ -151,18 +192,18 @@ une fenêtre via une `iframe sandbox="allow-scripts"` (**sans** `allow-same-orig
 Une application peut, si elle le souhaite, piloter sa fenêtre par `postMessage` :
 `parent.postMessage({type: 'winweb:setTitle', title: '…'}, '*')` ou `{type: 'winweb:close'}`.
 
-### `.html` / `.htm`
+##### `.html` / `.htm`
 
 La page s'ouvre comme une application, dans une fenêtre et avec le même sandbox. Les ressources
 relatives (CSS, JS, images du même dossier) sont résolues via `/vfs/…`.
 
-### `.js`
+##### `.js`
 
 Le script est exécuté dans une iframe sandboxée. Ses `console.log/info/warn/error`, ses erreurs
 non interceptées et les promesses rejetées s'affichent dans une fenêtre console. Les boutons permettent de
 relancer le script, de l'arrêter, d'effacer la console ou d'afficher la sortie graphique (le DOM de l'iframe).
 
-### `.exe` / `.dll`
+##### `.exe` / `.dll`
 
 **Jamais exécutés.** Une fenêtre « Propriétés de l'exécutable » affiche l'analyse de l'en-tête PE
 faite avec `struct` (`pe_info.py`) : signatures MZ et PE, format PE32/PE32+, architecture, sous-système
@@ -170,14 +211,14 @@ GUI ou console, type (application ou DLL), nombre et noms des sections avec leur
 point d'entrée, adresse de base, assemblage .NET, protections ASLR/DEP/CFG. Elle explique aussi que
 l'exécution native n'est pas disponible dans le navigateur.
 
-### Autres associations
+##### Autres associations
 
 Images (`png jpg gif webp svg bmp ico avif`) → Photos ; textes (`txt md log`) → Bloc-notes ; code et
 configuration (`py ts mjs json xml css c cpp java sql sh bat ini yml…`) → Éditeur++ ;
 `csv` → Tableur ; `wdoc` → Traitement de texte ; `wcalc` → Tableur ; `wpres` → Diaporama ;
 `wdb` → Base de données ; `wnote` → Notes. Les autres types proposent « Ouvrir avec ».
 
-## Navigateur web
+#### Navigateur web
 
 La plupart des sites interdisent l'affichage dans une iframe. En mode **Protégé** (par défaut), le serveur
 récupère la page (`GET /web?url=…`, module `web_proxy.py`, bibliothèque standard), y ajoute une balise `<base>`
@@ -192,7 +233,7 @@ Protection SSRF : seules les adresses IP publiques sont joignables ; la vérific
 connexion (y compris après chaque redirection), ce qui empêche d'atteindre `127.0.0.1`, le réseau local ou
 `169.254.169.254`, même via un nom DNS. Pages limitées à 8 Mo, délai de 12 s, variables `http_proxy` ignorées.
 
-## Sécurité
+#### Sécurité
 
 - **Aucune exécution côté serveur** de contenu déposé : ni `subprocess`, ni `os.system`, ni `exec`, ni `eval`.
 - **Chemins** : tous les chemins de l'API sont normalisés (rejet de `..`, de l'octet nul et des caractères
@@ -211,7 +252,7 @@ connexion (y compris après chaque redirection), ce qui empêche d'atteindre `12
   5000 lignes renvoyées au plus. Le tableur évalue ses formules avec son propre analyseur (aucun `eval`).
 - Écoute sur **127.0.0.1** par défaut.
 
-## Structure
+#### Structure
 
 ```
 app.py              serveur Flask : pages, API REST, service sandboxé des fichiers
@@ -232,7 +273,7 @@ exemples/           horloge.wapp, serpent.wapp, bonjour.html, demo.js, make_wapp
 data/               créé au premier lancement (fichiers de l'utilisateur)
 ```
 
-### API REST (extrait)
+##### API REST (extrait)
 
 `GET /api/fs/list|stat|read|search`, `POST /api/fs/create|write|rename|move|copy|delete|restore|empty-trash|upload`,
 `GET|POST /api/positions`, `POST /api/wapp/open`, `GET /api/pe`, contenu brut : `GET /vfs/<chemin>`,
@@ -241,7 +282,7 @@ bases de données : `GET /api/db/schema?path=`, `POST /api/db/exec {path, sql, p
 
 Tests : `python3 -m unittest discover -s tests`.
 
-## Limites connues
+#### Limites connues
 
 - Les `.exe` ne sont pas exécutés (c'est voulu) : seul l'en-tête PE est analysé.
 - Les applications sandboxées ont une origine opaque : pas de `localStorage`, de cookies, ni de `fetch`
@@ -262,7 +303,7 @@ Tests : `python3 -m unittest discover -s tests`.
   `.pptx` ; la mise en page du traitement de texte est continue (repères de page, pas de vraie pagination).
 - Serveur de développement Flask : il convient à un usage local, pas à une exposition sur Internet.
 
-## Crédits
+#### Crédits
 
 | Contributeur | Rôle |
 |--------------|------|

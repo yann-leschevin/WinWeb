@@ -1,0 +1,71 @@
+/* Fenêtres */
+#window-layer { position: absolute; inset: 0 0 var(--tb-h) 0; pointer-events: none; z-index: 1; }
+#snap-preview {
+  position: absolute; z-index: 2; pointer-events: none;
+  border-radius: var(--radius); border: 1px solid rgba(255, 255, 255, .55);
+  background: rgba(255, 255, 255, .22); backdrop-filter: blur(18px);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .15); transition: all .12s ease;
+}
+
+.window {
+  position: absolute; display: flex; flex-direction: column; pointer-events: auto;
+  background: var(--win-bg); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .18);
+  animation: win-open .16s cubic-bezier(.1, .9, .2, 1);
+  transition: opacity .16s, transform .18s ease, box-shadow .2s;
+}
+.window.active { box-shadow: var(--shadow); }
+.window.maximized, .window.snapped { border-radius: 0; }
+.window.maximized { border-color: transparent; }
+.window.minimized { opacity: 0; transform: translateY(60px) scale(.85); pointer-events: none; visibility: hidden; }
+.window.closing { opacity: 0; transform: scale(.95); pointer-events: none; }
+@keyframes win-open { from { opacity: 0; transform: scale(.94); } }
+.style-win10 .window { border-color: color-mix(in srgb, var(--accent) 60%, transparent); box-shadow: 0 4px 18px rgba(0, 0, 0, .25); }
+.style-win10 .window:not(.active) { border-color: var(--border-strong); }
+
+.win-titlebar {
+  flex: none; height: 32px; display: flex; align-items: center; gap: 8px; padding-left: 10px;
+  border-radius: var(--radius) var(--radius) 0 0; touch-action: none;
+}
+.window.maximized .win-titlebar { border-radius: 0; }
+.win-icon { width: 18px; height: 18px; display: grid; place-items: center; font-size: 15px; flex: none; pointer-events: none; }
+.win-icon .ico-svg { width: 16px; height: 16px; }
+.win-title { flex: 1; min-width: 0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.window:not(.active) .win-title, .window:not(.active) .win-icon { opacity: .6; }
+.win-controls { display: flex; align-self: stretch; }
+.wc {
+  width: 46px; border: 0; background: transparent; display: grid; place-items: center; color: var(--text);
+}
+.wc svg { width: 10px; height: 10px; }
+.wc:hover { background: var(--hover); }
+.wc:active { background: var(--pressed); }
+.wc-close:hover { background: #c42b1c; color: #fff; }
+.wc-close:active { background: #c63a2d; color: #fff; }
+.window .win-controls .wc:last-child { border-top-right-radius: var(--radius); }
+.window.maximized .win-controls .wc:last-child { border-radius: 0; }
+.fixed-size .wc-min { display: none; }
+.dialog-window .wc-min { display: none; }
+
+.win-body { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 0 0 var(--radius) var(--radius); }
+.window.maximized .win-body, .window.snapped .win-body { border-radius: 0; }
+.win-body > * { flex: 1; min-height: 0; }
+
+/* Poignées de redimensionnement */
+.rz { position: absolute; z-index: 5; touch-action: none; }
+.rz-n { top: -4px; left: 8px; right: 8px; height: 8px; cursor: n-resize; }
+.rz-s { bottom: -4px; left: 8px; right: 8px; height: 8px; cursor: s-resize; }
+.rz-e { right: -4px; top: 8px; bottom: 8px; width: 8px; cursor: e-resize; }
+.rz-w { left: -4px; top: 8px; bottom: 8px; width: 8px; cursor: w-resize; }
+.rz-ne { right: -5px; top: -5px; width: 14px; height: 14px; cursor: ne-resize; }
+.rz-nw { left: -5px; top: -5px; width: 14px; height: 14px; cursor: nw-resize; }
+.rz-se { right: -5px; bottom: -5px; width: 14px; height: 14px; cursor: se-resize; }
+.rz-sw { left: -5px; bottom: -5px; width: 14px; height: 14px; cursor: sw-resize; }
+.window.maximized .rz { display: none; }
+
+/* Téléphone : boutons de fenêtre plus larges au doigt, pas de poignées de redimensionnement */
+@media (max-width: 640px) {
+  .win-titlebar { height: 40px; }
+  .wc { width: 48px; }
+  .rz { display: none; }
+}
