@@ -43,6 +43,7 @@ const persist = debounce(() => {
 }, 300);
 
 let proxyAvailable = null;
+let warnedNoProxy = false;
 async function checkProxy() {
   if (proxyAvailable !== null) return proxyAvailable;
   try {
@@ -212,7 +213,10 @@ function launch({ url = null, path = null } = {}) {
     tab.title = hostOf(url);
     if (!tab.direct && !(await checkProxy())) {
       tab.direct = true;
-      toast('Navigateur', 'Le mandataire web est désactivé sur le serveur : passage en mode direct.', { icon: '⚡' });
+      if (!warnedNoProxy) { // un seul avertissement par session
+        warnedNoProxy = true;
+        toast('Navigateur', 'Le mandataire web est désactivé sur le serveur : passage en mode direct.', { icon: '⚡' });
+      }
     }
     if (tab.direct) {
       // Origine externe : allow-same-origin est sans risque pour WinWeb (autre origine).

@@ -1,4 +1,4 @@
-/* Menu Démarrer — Windows 11 par défaut, variante Windows 10 */
+/* Menu Démarrer — style Moderne par défaut, variante Classique */
 #start-menu {
   position: absolute; z-index: 4; left: 50%; bottom: calc(var(--tb-h) + 12px); transform: translateX(-50%);
   width: min(660px, calc(100vw - 24px)); height: min(720px, calc(100vh - var(--tb-h) - 24px));
@@ -64,7 +64,7 @@
 .sm-power { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 8px 10px; border-radius: var(--radius-sm); }
 .sm-power-label { font-size: 12px; }
 
-/* ---- Variante Windows 10 : ancré à gauche, deux colonnes (liste + vignettes) */
+/* ---- Variante Classique : ancré à gauche, deux colonnes (liste + vignettes) */
 .style-win10 #start-menu {
   left: 0; bottom: var(--tb-h); transform: none; border-radius: 0; border: 0;
   width: min(820px, 100vw); height: min(660px, calc(100vh - var(--tb-h)));

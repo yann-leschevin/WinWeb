@@ -252,7 +252,7 @@ function launch({ cwd = '/Documents' } = {}) {
       }
       const app = getApps().find((a) => a.id === name.toLowerCase() || a.name.toLowerCase() === name.toLowerCase());
       if (app) launchApp(app.id);
-      else throw new Error(`Windows ne trouve pas « ${name} ». Vérifiez que vous avez tapé le nom correctement.`);
+      else throw new Error(`WinWeb ne trouve pas « ${name} ». Vérifiez que vous avez tapé le nom correctement.`);
     },
   };
   Object.assign(commands, {

@@ -1,4 +1,4 @@
-// Paramètres : personnalisation (thème, style Windows 10/11, fond d'écran,
+// Paramètres : personnalisation (thème, style Moderne/Classique, fond d'écran,
 // accentuation), système et applications par défaut.
 import { fileDialog } from '../dialogs.js';
 import { appIcon } from '../icons.js';
@@ -73,10 +73,10 @@ function persoPage(rerender) {
         s.theme, (v) => { setSettings({ theme: v }); rerender(); })),
     card('Style de l\'interface',
       choice([
-        ['win11', 'Windows 11', h('span', { class: 'st-style win11' }, h('i'), h('b'))],
-        ['win10', 'Windows 10', h('span', { class: 'st-style win10' }, h('i'), h('b'))],
+        ['win11', 'Moderne', h('span', { class: 'st-style win11' }, h('i'), h('b'))],
+        ['win10', 'Classique', h('span', { class: 'st-style win10' }, h('i'), h('b'))],
       ], s.style, (v) => { setSettings({ style: v }); rerender(); }),
-      h('p', { class: 'st-help', text: 'Windows 11 : barre des tâches centrée, coins arrondis, menu Démarrer flottant. Windows 10 : barre alignée à gauche, angles droits, menu Démarrer en deux colonnes.' })),
+      h('p', { class: 'st-help', text: 'Moderne : barre des tâches centrée, coins arrondis, menu Démarrer flottant. Classique : barre alignée à gauche, angles droits, menu Démarrer en deux colonnes.' })),
     card('Arrière-plan', wallpapers),
     card('Couleur d\'accentuation', accents),
     card('Compte', h('label', { class: 'st-row' }, h('span', { text: 'Nom affiché' }), nameInput)),
@@ -86,7 +86,7 @@ function persoPage(rerender) {
 function systemPage() {
   const rows = [
     ['Système d\'exploitation', 'WinWeb 1.0 (simulation dans le navigateur)'],
-    ['Style', getSettings().style === 'win10' ? 'Windows 10' : 'Windows 11'],
+    ['Style', getSettings().style === 'win10' ? 'Classique' : 'Moderne'],
     ['Navigateur', navigator.userAgent],
     ['Résolution', `${window.screen.width} × ${window.screen.height} (zone : ${window.innerWidth} × ${window.innerHeight})`],
     ['Processeurs logiques', String(navigator.hardwareConcurrency || 'inconnu')],
@@ -161,4 +161,4 @@ function launch({ page = 'perso' } = {}) {
   return win;
 }
 
-export default { id: 'settings', name: 'Paramètres', icon: '⚙️', launch, description: 'Thème, fond d\'écran, style Windows 10/11' };
+export default { id: 'settings', name: 'Paramètres', icon: '⚙️', launch, description: 'Thème, fond d\'écran, style Moderne/Classique' };

@@ -1,4 +1,4 @@
-// Préférences utilisateur (thème, style Windows 10/11, fond d'écran, accent).
+// Préférences utilisateur (thème, style Moderne/Classique, fond d'écran, accent).
 import { emit } from './bus.js';
 import { rawUrl } from './utils.js';
 
@@ -16,7 +16,7 @@ export const WALLPAPERS = [
       + 'linear-gradient(160deg, #040b1f 0%, #0a1d4a 50%, #050d26 100%)',
   },
   {
-    id: 'hero', name: 'Lumière (Windows 10)',
+    id: 'hero', name: 'Lumière (Classique)',
     css: 'linear-gradient(105deg, transparent 38%, rgba(120,200,255,.55) 47%, rgba(255,255,255,.35) 50%, rgba(120,200,255,.45) 53%, transparent 62%),'
       + 'radial-gradient(ellipse at 50% 50%, #1565c0 0%, #0b3d91 45%, #021a45 100%)',
   },
